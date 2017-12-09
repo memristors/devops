@@ -49,7 +49,7 @@
 - nginx并发更高，单机支持10w qps，nginx处理请求异步非阻塞，apache阻塞
 - nginx多进程模式，apache有多进程与多线程两种模式
 - apache稳定性更高
-- 网络io模型不通，aapache采用select,nginx在linux 2.6后采用epool
+- 网络io模型不通，aapache采用select,nginx在linux 2.6后采用epoll
 
 ## io模型
 
@@ -74,6 +74,11 @@ IO Model的区别就是在两个阶段上各有不同的情况
 >当用户进程调用了select，那么整个进程会被block，而同时，kernel会“监视”所有select负责的socket，当任何一个socket中的数据准备好了，select就会返回。这个时候用户进程再调用read操作，将数据从kernel拷贝到用户进程。
 >
 > 用select的优势在于它可以同时处理多个connection。如果处理的连接数不是很高的话，使用select/epoll的web server不一定比使用multi-threading + blocking IO的web server性能更好，可能延迟还更大。select/epoll的优势并不是对于单个连接能处理得更快，而是在于能处理更多的连接。
+  - select:目前几乎在所有的平台上支持，其良好跨平台支持也是它的一个优点。select的一个缺点在于单个进程能够监视的文件描述符的数量存在1024的最大限制,对socket进行扫描时是线性扫描，即采用轮询的方法，效率较低,需要维护一个用来存放大量fd的数据结构，这样会使得用户空间和内核空间在传递该结构时复制开销大
+  - poll 除了文件描述符数量无最大限制（原理是链表存储fd），其他一样
+  - epoll <span style="color:red">2.6内核中提出的，</span>没有最大并发连接的限制，能打开的FD的上限远大于1024，效率提升，不是轮询的方式，不会随着FD数目的增加效率下降，只有活跃可用的FD才会调用callback函数，即Epoll最大的优点就在于它只管你“活跃”的连接，而跟连接总数无关。在用户空间和内核空间共享一片存储区域。
+  - 在连接数少并且连接都十分活跃的情况下，select和poll的性能可能比epoll好
+
 
 - asynchronous IO
 ![](/images/aio.gif)
