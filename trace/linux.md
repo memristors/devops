@@ -49,8 +49,61 @@ pidstat主要用于监控全部或指定进程占用系统资源的情况，如C
 pidstat [option] interval [count]
 -p 查看特定进程
 -u 查看cpu
--m 查看内存
+-r 查看内存利用率与缺页终端信息
 -d 查看磁盘io
 -w 上下文切换统计信息
 ```
 命令现实的具体含义通过 ```man pidstat``` 查看
+
+
+## mpstat
+Report processors related statistics
+
+这个命令可以按时间线打印每个CPU的消耗，常常用于检查不均衡的问题。如果只有一个繁忙的CPU，可以判断是属于单进程的应用程序。
+
+## iostat
+Report  Central  Processing  Unit  (CPU)  statistics  and input/output statistics for devices, partitions and  network  filesystems (NFS).
+
+```
+      iostat
+             Display  a  single  history  since  boot report for all CPU and
+             Devices.
+
+      iostat -d 2
+             Display a continuous device report at two second intervals.
+
+      iostat -d 2 6
+             Display six reports at two second intervals for all devices.
+
+      iostat -x hda hdb 2 6
+             Display six reports of extended statistics at two second inter-
+             vals for devices hda and hdb.
+
+      iostat -p sda 2 6
+             Display  six reports at two second intervals for device sda and
+             all its partitions (sda1, etc.)
+```
+
+## free
+内存查看
+
+## sar
+Collect, report, or save system activity information
+
+```
+# sar -n dev 2 3
+01:17:51 PM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s
+01:17:52 PM        lo    357.00    357.00     98.96     98.96      0.00      0.00      0.00
+01:17:52 PM     xgbe0    180.00    156.00     25.48     15.02      0.00      0.00      0.00
+01:17:52 PM     xgbe1      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+01:17:52 PM      eth0      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+01:17:52 PM      eth1      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+01:17:52 PM      eth2      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+01:17:52 PM      eth3      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+01:17:52 PM      usb0      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+```
+
+## top
+The top program provides a dynamic real-time view of a running system.It can display system summary information as well as a list  of  tasks currently being managed by the Linux kernel.
+
+<span style='color:red;font-size:x-large';>有不懂的选项就问man命令</span>
